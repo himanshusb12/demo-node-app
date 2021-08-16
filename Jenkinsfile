@@ -54,7 +54,9 @@ pipeline {
 
         stage("Quality Gate") {
             steps {
-                bat "echo Quality check"
+                timeout(time: 1, unit: "HOURS") {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
 
@@ -91,7 +93,8 @@ pipeline {
 
                 stage("Kubernetes deployment") {
                     steps {
-                        bat "echo K8s deployment"
+                        bat "kubectl apply -f configmap.yaml"
+                        bat "kubectl apply -f deployment.yaml"
                     }
                 }
 
