@@ -53,7 +53,9 @@ pipeline {
         }
 
         stage("Quality Gate") {
-
+            steps {
+                bat "echo Quality check"
+            }
         }
 
         stage("Build docker image") {
@@ -86,7 +88,7 @@ pipeline {
 
             stage("Kubernetes deployment") {
                 steps {
-                    
+                    bat "echo K8s deployment"
                 }
             }
 
