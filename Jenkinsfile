@@ -79,10 +79,12 @@ pipeline {
         stage("Deployment") {
             parallel {
                 stage("Docker deployment") {
-                    steps {
+                    script {
                         if (bat(script: "docker port c_${username}_app", returnStatus: true) == 0) {
                             bat "docker rm -f c_${username}_app"
                         }
+                    }
+                    steps {
                         bat "docker run --name c_${username}_app -p ${appPort}:${dockerPort} -d ${username}/devops-demo-app:latest"
                     }
                 }
