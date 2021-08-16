@@ -76,24 +76,24 @@ pipeline {
             }
         }
 
-        parallel {
-            stage("Docker deployment") {
-                steps {
-                    if (bat(script: "docker port c_${username}_app", returnStatus: true) == 0) {
-                        bat "docker rm -f c_${username}_app"
+        stage("Deployment") {
+            parallel {
+                stage("Docker deployment") {
+                    steps {
+                        if (bat(script: "docker port c_${username}_app", returnStatus: true) == 0) {
+                            bat "docker rm -f c_${username}_app"
+                        }
+                        bat "docker run --name c_${username}_app -p ${appPort}:${dockerPort} -d ${username}/devops-demo-app:latest"
                     }
-                    bat "docker run --name c_${username}_app -p ${appPort}:${dockerPort} -d ${username}/devops-demo-app:latest"
                 }
-            }
 
-            stage("Kubernetes deployment") {
-                steps {
-                    bat "echo K8s deployment"
+                stage("Kubernetes deployment") {
+                    steps {
+                        bat "echo K8s deployment"
+                    }
                 }
+
             }
-
-        }
-
-        
+        }   
     }
 }
